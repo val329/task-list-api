@@ -15,7 +15,12 @@ def get_all_tasks():
     if title_param:
         query = query.where(Task.title.ilike(f"%{title_param}"))
 
-    query = query.order_by(Task.id)
+    sort_param = request.args.get("sort")
+    if sort_param == "asc":
+        query = query.order_by(Task.title.asc())
+    elif sort_param == "desc":
+        query = query.order_by(Task.title.desc())
+
     tasks = db.session.scalars(query)
 
     response = []
