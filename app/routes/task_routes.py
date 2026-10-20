@@ -33,12 +33,7 @@ def get_one_task(task_id):
 @bp.post("")
 def create_task():
     request_body = request.get_json()
-
-    try:
-        task = Task.from_dict(request_body)
-    except KeyError as e:
-        response = {"details": "Invalid data"}
-        abort(make_response(response, 400))
+    task = create_model(Task, request_body)
 
     db.session.add(task)
     db.session.commit()
