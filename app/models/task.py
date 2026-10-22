@@ -22,26 +22,17 @@ class Task(db.Model):
 
 
     @classmethod
-    def from_dict(cls, data):
-        data = cls.validate_attributes(cls, data)
+    def from_dict(cls, task_data):
+        # data = cls.validate_attributes(cls, task_data)
 
         task = cls(
-            title=data.get("title"),
-            description=data.get("description"),
-            completed_at=data.get("completed_at"), 
-            is_complete=True if data.get("completed_at") else False
+            title=task_data["title"],
+            description=task_data["description"],
+            completed_at=task_data.get("completed_at"), 
+            is_complete=True if task_data.get("completed_at") else False
         )
         return task
     
-
-    def validate_attributes(self, data):
-        REQUIRED_ATTRIBUTES = ["title", "description"]
-
-        for attr in REQUIRED_ATTRIBUTES: 
-            if not data.get(attr):
-                raise KeyError(f"details: Invalid data, missing {attr}")
-
-        return data
 
 
         
