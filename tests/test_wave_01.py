@@ -2,97 +2,99 @@ from app.models.task import Task
 from app.db import db
 import pytest
 
+
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_task_to_dict():
-    #Arrange
-    new_task = Task(id = 1, title="Make My Bed", 
-                    description="Start the day off right!", 
-                    completed_at=None)
-    
-    #Act
+    # Arrange
+    new_task = Task(
+        id=1,
+        title="Make My Bed",
+        description="Start the day off right!",
+        completed_at=None,
+    )
+
+    # Act
     task_dict = new_task.to_dict()
 
-    #Assert
+    # Assert
     assert len(task_dict) == 4
     assert task_dict["id"] == 1
     assert task_dict["title"] == "Make My Bed"
     assert task_dict["description"] == "Start the day off right!"
     assert task_dict["is_complete"] == False
 
+
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_task_to_dict_missing_id():
-    #Arrange
-    new_task = Task(title="Make My Bed", 
-                    description="Start the day off right!", 
-                    completed_at=None)
-    
-    #Act
+    # Arrange
+    new_task = Task(
+        title="Make My Bed", description="Start the day off right!", completed_at=None
+    )
+
+    # Act
     task_dict = new_task.to_dict()
 
-    #Assert
+    # Assert
     assert len(task_dict) == 4
     assert task_dict["id"] is None
     assert task_dict["title"] == "Make My Bed"
     assert task_dict["description"] == "Start the day off right!"
     assert task_dict["is_complete"] == False
 
+
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_task_to_dict_missing_title():
-    #Arrange
-    new_task = Task(id = 1,
-                    description="Start the day off right!", 
-                    completed_at=None)
-    
-    #Act
+    # Arrange
+    new_task = Task(id=1, description="Start the day off right!", completed_at=None)
+
+    # Act
     task_dict = new_task.to_dict()
 
-    #Assert
+    # Assert
     assert len(task_dict) == 4
     assert task_dict["id"] == 1
     assert task_dict["title"] is None
     assert task_dict["description"] == "Start the day off right!"
     assert task_dict["is_complete"] == False
 
+
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_task_from_dict():
-    #Arrange
-    task_dict =  {
+    # Arrange
+    task_dict = {
         "title": "Make My Bed",
         "description": "Start the day off right!",
-        "is_complete": False
+        "is_complete": False,
     }
 
-    #Act
-    task_obj =  Task.from_dict(task_dict)
+    # Act
+    task_obj = Task.from_dict(task_dict)
 
-    #Assert
+    # Assert
     assert task_obj.title == "Make My Bed"
     assert task_obj.description == "Start the day off right!"
     assert task_obj.completed_at is None
 
+
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_task_from_dict_no_title():
-    #Arrange
-    task_dict =  {
-        "description": "Start the day off right!",
-        "is_complete": False
-    }
+    # Arrange
+    task_dict = {"description": "Start the day off right!", "is_complete": False}
 
-    #Act & Assert
-    with pytest.raises(KeyError, match = 'title'):
+    # Act & Assert
+    with pytest.raises(KeyError, match="title"):
         Task.from_dict(task_dict)
+
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_task_from_dict_no_description():
-    #Arrange
-    task_dict =  {
-        "title": "Make My Bed",
-        "is_complete": False
-    }
+    # Arrange
+    task_dict = {"title": "Make My Bed", "is_complete": False}
 
-    #Act & Assert
-    with pytest.raises(KeyError, match = 'description'):
+    # Act & Assert
+    with pytest.raises(KeyError, match="description"):
         Task.from_dict(task_dict)
+
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_tasks_no_saved_tasks(client):
@@ -119,7 +121,7 @@ def test_get_tasks_one_saved_tasks(client, one_task):
             "id": 1,
             "title": "Go on my daily walk 🏞",
             "description": "Notice something new every day",
-            "is_complete": False
+            "is_complete": False,
         }
     ]
 
@@ -136,7 +138,7 @@ def test_get_task(client, one_task):
         "id": 1,
         "title": "Go on my daily walk 🏞",
         "description": "Notice something new every day",
-        "is_complete": False
+        "is_complete": False,
     }
 
 
@@ -153,16 +155,19 @@ def test_get_task_not_found(client):
     # *****************************************************************
     # **Complete test with assertion about response body***************
     # *****************************************************************
-    assert response_body == {"details": "Task 1 not found"}
+    assert response_body == {"message": "Task 1 not found"}
 
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_task(client):
     # Act
-    response = client.post("/tasks", json={
-        "title": "A Brand New Task",
-        "description": "Test Description",
-    })
+    response = client.post(
+        "/tasks",
+        json={
+            "title": "A Brand New Task",
+            "description": "Test Description",
+        },
+    )
     response_body = response.get_json()
 
     # Assert
@@ -171,9 +176,9 @@ def test_create_task(client):
         "id": 1,
         "title": "A Brand New Task",
         "description": "Test Description",
-        "is_complete": False
+        "is_complete": False,
     }
-    
+
     query = db.select(Task).where(Task.id == 1)
     new_task = db.session.scalar(query)
 
@@ -182,13 +187,17 @@ def test_create_task(client):
     assert new_task.description == "Test Description"
     assert new_task.completed_at == None
 
+
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_update_task(client, one_task):
     # Act
-    response = client.put("/tasks/1", json={
-        "title": "Updated Task Title",
-        "description": "Updated Test Description",
-    })
+    response = client.put(
+        "/tasks/1",
+        json={
+            "title": "Updated Task Title",
+            "description": "Updated Test Description",
+        },
+    )
 
     # Assert
     assert response.status_code == 204
@@ -201,14 +210,16 @@ def test_update_task(client, one_task):
     assert task.completed_at == None
 
 
-
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_update_task_not_found(client):
     # Act
-    response = client.put("/tasks/1", json={
-        "title": "Updated Task Title",
-        "description": "Updated Test Description",
-    })
+    response = client.put(
+        "/tasks/1",
+        json={
+            "title": "Updated Task Title",
+            "description": "Updated Test Description",
+        },
+    )
     response_body = response.get_json()
 
     # Assert
@@ -218,8 +229,7 @@ def test_update_task_not_found(client):
     # *****************************************************************
     # **Complete test with assertion about response body***************
     # *****************************************************************
-    assert response_body == {"details": "Task 1 not found"}
-    
+    assert response_body == {"message": "Task 1 not found"}
 
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
@@ -232,6 +242,7 @@ def test_delete_task(client, one_task):
 
     query = db.select(Task).where(Task.id == 1)
     assert db.session.scalar(query) == None
+
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_task_not_found(client):
@@ -246,26 +257,21 @@ def test_delete_task_not_found(client):
     # *****************************************************************
     # **Complete test with assertion about response body***************
     # *****************************************************************
-
+    assert response_body == {"message": "Task 1 not found"}
     assert db.session.scalars(db.select(Task)).all() == []
-    assert response_body == {"details": "Task 1 not found"}
-    
+
 
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_task_must_contain_title(client):
     # Act
-    response = client.post("/tasks", json={
-        "description": "Test Description"
-    })
+    response = client.post("/tasks", json={"description": "Test Description"})
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 400
     assert "details" in response_body
-    assert response_body == {
-        "details": "Invalid data"
-    }
+    assert response_body == {"details": "Invalid data"}
     assert db.session.scalars(db.select(Task)).all() == []
 
 
@@ -278,7 +284,5 @@ def test_create_task_must_contain_description(client):
     # Assert
     assert response.status_code == 400
     assert "details" in response_body
-    assert response_body == {
-        "details": "Invalid data"
-    }
+    assert response_body == {"details": "Invalid data"}
     assert db.session.scalars(db.select(Task)).all() == []
