@@ -28,7 +28,6 @@ def get_one_task(task_id):
 def create_task():
     request_body = request.get_json()
     response = create_model(Task, request_body)
-
     return response
 
 
@@ -38,8 +37,8 @@ def edit_task(task_id):
     task = validate_model(Task, task_id)
     request_body = request.get_json()
 
-    task.title = request_body.get("title")
-    task.description = request_body.get("description")
+    task.title = request_body["title"]
+    task.description = request_body["description"]
     task.completed_at = request_body.get("completed_at")
     task.is_complete = request_body.get("is_complete")
     db.session.commit()
