@@ -1,7 +1,11 @@
 from flask import Blueprint, abort, make_response, request, Response
 from app import db
 from app.models.task import Task
-from app.routes.route_utilities import create_model, validate_model
+from app.routes.route_utilities import (
+    create_model,
+    validate_model,
+    get_models_with_filters,
+)  # , send_message
 from datetime import datetime
 
 bp = Blueprint("tasks", __name__, url_prefix="/tasks")
@@ -9,24 +13,8 @@ bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 
 @bp.get("")
 def get_all_tasks():
-
-    query = db.select(Task)
-
-    title_param = request.args.get("title")
-    if title_param:
-        query = query.where(Task.title.ilike(f"%{title_param}"))
-
-    sort_param = request.args.get("sort")
-    if sort_param == "asc":
-        query = query.order_by(Task.title.asc())
-    elif sort_param == "desc":
-        query = query.order_by(Task.title.desc())
-
-    tasks = db.session.scalars(query)
-
-    response = []
-    for task in tasks:
-        response.append(task.to_dict())
+    tasks = get_models_with_filters(Task, request.args)
+    response = [task for task in tasks]
     return response
 
 
@@ -39,12 +27,9 @@ def get_one_task(task_id):
 @bp.post("")
 def create_task():
     request_body = request.get_json()
-    task = create_model(Task, request_body)
+    response = create_model(Task, request_body)
 
-    db.session.add(task)
-    db.session.commit()
-
-    return task.to_dict(), 201
+    return response
 
 
 @bp.put("/<task_id>")
@@ -77,6 +62,7 @@ def mark_complete(task_id):
     task = validate_model(Task, task_id)
     task.completed_at = datetime.now()
     db.session.commit()
+    # send_message()
 
     return Response(status=204, mimetype="application/json")
 
