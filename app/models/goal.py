@@ -1,22 +1,23 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
 
+
 class Goal(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str]
     tasks: Mapped[list["Task"]] = relationship(back_populates="goal")
-    
+
     def to_dict(self):
-            return {
-                "id": self.id,
-                "title": self.title
-            }
+        result = {}
+        result["id"] = self.id
+        result["title"] = self.title
+
+        if self.tasks: 
+            result["task_ids"] = [i.id for i in self.tasks]
+
+        return result
 
     @classmethod
-    def from_dict(cls, task_data):
-
-        task = cls(
-            title=task_data["title"]
-        )
-        return task
-
+    def from_dict(cls, goal_data):
+        goal = cls(title=goal_data["title"])
+        return goal

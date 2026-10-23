@@ -41,6 +41,7 @@ def edit_task(task_id):
     task.description = request_body["description"]
     task.completed_at = request_body.get("completed_at")
     task.is_complete = request_body.get("is_complete")
+    task.goal_id = request_body.get("goal_id")
     db.session.commit()
 
     return Response(status=204, mimetype="application/json")
