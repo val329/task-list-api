@@ -1,5 +1,7 @@
 from flask import abort, make_response
 from ..db import db
+import requests
+import os
 
 
 def create_model(cls, model_data):
@@ -34,7 +36,6 @@ def validate_model(cls, model_id):
 
 
 def get_models_with_filters(cls, filters=None):
-
     query = db.select(cls)
 
     if filters:
@@ -55,5 +56,15 @@ def get_models_with_filters(cls, filters=None):
     return response
 
 
-# def send_message(task):
-#     pass
+def send_message():
+    url = "https://slack.com/api/chat.postMessage"
+    headers = {"authorization": os.environ.get("SLACK_TOKEN")}
+    message = {
+        "channel": "task-notifications-c26",
+        "title": "My Beautiful Task",
+        "text": "Someone just completed the task My Beautiful Task"
+    }
+
+    response = requests.post(url, json=message, headers=headers)
+    return response.json()
+

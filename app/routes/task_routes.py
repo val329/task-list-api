@@ -1,11 +1,12 @@
-from flask import Blueprint, abort, make_response, request, Response
+from flask import Blueprint, request, Response
 from app import db
 from app.models.task import Task
 from app.routes.route_utilities import (
     create_model,
     validate_model,
     get_models_with_filters,
-)  # , send_message
+    send_message,
+)
 from datetime import datetime
 
 bp = Blueprint("tasks", __name__, url_prefix="/tasks")
@@ -14,8 +15,7 @@ bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 @bp.get("")
 def get_all_tasks():
     tasks = get_models_with_filters(Task, request.args)
-    response = [task for task in tasks]
-    return response
+    return tasks
 
 
 @bp.get("/<task_id>")
@@ -61,7 +61,7 @@ def mark_complete(task_id):
     task = validate_model(Task, task_id)
     task.completed_at = datetime.now()
     db.session.commit()
-    # send_message()
+    send_message()
 
     return Response(status=204, mimetype="application/json")
 
