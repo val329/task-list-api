@@ -1,6 +1,5 @@
 from flask import Flask
 from .db import db, migrate
-from .models import task, goal
 from .routes.task_routes import bp as tasks_bp
 from .routes.goal_routes import bp as goals_bp
 import os

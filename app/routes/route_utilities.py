@@ -8,7 +8,6 @@ def create_model(cls, model_data):
     try:
         model = cls.from_dict(model_data)
     except KeyError:
-        # response = {"details": "Invalid data"}
         response = {"details": "Invalid data"}
         abort(make_response(response, 400))
 
@@ -40,7 +39,6 @@ def get_models_with_filters(cls, filters=None):
 
     if filters:
         sort_by = filters.get("sort_by", "title")  # sort by title by default
-        # order = filters.get("order", "asc")     # sort order by default
 
         for key, value in filters.items():
             if hasattr(cls, key):
@@ -62,9 +60,8 @@ def send_message():
     message = {
         "channel": "task-notifications-c26",
         "title": "My Beautiful Task",
-        "text": "Someone just completed the task My Beautiful Task"
+        "text": "Someone just completed the task My Beautiful Task",
     }
 
     response = requests.post(url, json=message, headers=headers)
     return response.json()
-

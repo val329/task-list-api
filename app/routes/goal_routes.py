@@ -6,8 +6,7 @@ from app.routes.route_utilities import (
     create_model,
     validate_model,
     get_models_with_filters,
-)  # , send_message
-from datetime import datetime
+)
 
 bp = Blueprint("goals", __name__, url_prefix="/goals")
 

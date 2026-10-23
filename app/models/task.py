@@ -21,15 +21,13 @@ class Task(db.Model):
         result["description"] = self.description
         result["is_complete"] = True if self.completed_at else False
 
-        if self.goal_id: 
+        if self.goal_id:
             result["goal_id"] = self.goal_id
-            
 
         return result
 
     @classmethod
     def from_dict(cls, task_data):
-        # data = cls.validate_attributes(cls, task_data)
         goal_id = task_data.get("goal_id")
 
         task = cls(
