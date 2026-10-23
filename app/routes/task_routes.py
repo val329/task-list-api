@@ -62,7 +62,7 @@ def mark_complete(task_id):
     task = validate_model(Task, task_id)
     task.completed_at = datetime.now()
     db.session.commit()
-    send_message()
+    send_message(task.title)
 
     return Response(status=204, mimetype="application/json")
 

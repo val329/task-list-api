@@ -54,13 +54,12 @@ def get_models_with_filters(cls, filters=None):
     return response
 
 
-def send_message():
+def send_message(title):
     url = "https://slack.com/api/chat.postMessage"
     headers = {"authorization": os.environ.get("SLACK_TOKEN")}
     message = {
         "channel": "task-notifications-c26",
-        "title": "My Beautiful Task",
-        "text": "Someone just completed the task My Beautiful Task",
+        "text": f"Someone just completed the task {title}",
     }
 
     response = requests.post(url, json=message, headers=headers)
