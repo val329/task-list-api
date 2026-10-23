@@ -23,9 +23,7 @@ class Task(db.Model):
 
         if self.goal_id: 
             result["goal_id"] = self.goal_id
-
-        if self.goal:
-            result["goal"] = self.goal
+            
 
         return result
 
